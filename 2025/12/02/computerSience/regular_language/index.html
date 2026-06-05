@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jackgreed.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="first,regular languagewhat is regular language? in general,regular language consists five elements:  an alphbet(meaning a finite set of symbols) “” (meaning Concatenation)(you don’t need to write it e">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Regular Language,NFA,DFA,and so on">
+<meta property="og:url" content="https://jackgreed.github.io/2025/12/02/computerSience/regular_language/index.html">
+<meta property="og:site_name" content="MyBlog">
+<meta property="og:description" content="first,regular languagewhat is regular language? in general,regular language consists five elements:  an alphbet(meaning a finite set of symbols) “” (meaning Concatenation)(you don’t need to write it e">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-12-02T10:52:00.000Z">
+<meta property="article:modified_time" content="2025-12-02T11:33:18.252Z">
+<meta property="article:author" content="Jack Greed">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jackgreed.github.io/2025/12/02/computerSience/regular_language/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://jackgreed.github.io/2025/12/02/computerSience/regular_language/","path":"2025/12/02/computerSience/regular_language/","title":"Regular Language,NFA,DFA,and so on"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Regular Language,NFA,DFA,and so on | MyBlog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">MyBlog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">A sculpture from back to future</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#first-regular-language"><span class="nav-number">1.</span> <span class="nav-text">first,regular language</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#next-NFA"><span class="nav-number">2.</span> <span class="nav-text">next, NFA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#anyway-back-to-nodes"><span class="nav-number">3.</span> <span class="nav-text">anyway, back to nodes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#edges"><span class="nav-number">4.</span> <span class="nav-text">edges</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NFA"><span class="nav-number">5.</span> <span class="nav-text">NFA</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jack Greed</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://jackgreed.github.io/2025/12/02/computerSience/regular_language/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jack Greed">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MyBlog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Regular Language,NFA,DFA,and so on | MyBlog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Regular Language,NFA,DFA,and so on
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-12-02 18:52:00 / 修改时间：19:33:18" itemprop="dateCreated datePublished" datetime="2025-12-02T18:52:00+08:00">2025-12-02</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="first-regular-language"><a href="#first-regular-language" class="headerlink" title="first,regular language"></a>first,regular language</h3><p>what is regular language?</p>
+<p>in general,regular language consists five elements:</p>
+<ol>
+<li>an alphbet(meaning a finite set of symbols)</li>
+<li>“” (meaning Concatenation)(you don’t need to write it explicitly)</li>
+<li>“|” (meaning union)(or)</li>
+<li>“*” (meaning kleene star)</li>
+<li>“()”(meaning group)</li>
+</ol>
+<p>for example,here is a sentence in RE:</p>
+<p> (aa)<em>b(aa)</em></p>
+<p>which means:<br>a sentence that starts with n number of “aa”, where n could be 0, followed by a “b”, and ends with m number of “aa”, where m could be 0.</p>
+<p>very easy,right?</p>
+<h3 id="next-NFA"><a href="#next-NFA" class="headerlink" title="next, NFA"></a>next, NFA</h3><p>NFA means Non-deterministic Finite Automaton.<br>we don’t care about what does it mean now.<br>let’s just introduce “nodes” and “edges” to express RE, ‘cause it’s more visualized.</p>
+<p>so, we will define “nodes” first:</p>
+<ol>
+<li>a node is a representation of a state in the automation.</li>
+</ol>
+<p><font size=5> oh please wait! </font></p>
+<p>what is state? and what is automation?</p>
+<p>you can just think automation is a machine that have different states, in every state, the machine can do sepecific things.</p>
+<p>let’s say: John is an automation, he has three states: “hungry”, “thirsty” and “idle”.</p>
+<p>when John is in “idle” state, as time passed by ,he could be thirty or hungry, either of them  would make him change his state.</p>
+<p>when John is in “hungry” state, he would eat something and change his state to “idle”.</p>
+<p>when John is in “thirsty” state, he would drink something and change his state to “idle”.</p>
+<p>so, in this example, “hungry”, “thirsty” and “idle” are all states of John(the automation).</p>
+<h3 id="anyway-back-to-nodes"><a href="#anyway-back-to-nodes" class="headerlink" title="anyway, back to nodes"></a>anyway, back to nodes</h3><ol>
+<li>a node is a representation of a state in the automation.</li>
+<li>nodes have types:<ul>
+<li>one and only one: start node, where the whole automation starts. in RE, it’s the beginning of the sentence.</li>
+<li>zero or more: middles nodes, where the automation mostly works with the input. </li>
+<li>at least one: accept nodes, where the automation ends. you may wonder why RE only have one end, but we have more here, we will discuss it later.</li>
+</ul>
+</li>
+<li>nodes are connected by edges.</li>
+</ol>
+<p><font size=1> I know some clever guys may say: hey they are not just edges, they contain information too. pls don’t be so hurry</font></p>
+<h3 id="edges"><a href="#edges" class="headerlink" title="edges"></a>edges</h3><ol>
+<li>edges are connections between nodes.</li>
+<li>edges have one and only one direction, from one node to another.</li>
+<li>egdes have packages, which indecates what kind of input can make the automation go through this edge.<br>in our John-automation example, time ,eating and drinking are all packages on edges. also noting that edges can have none package, meaning that the automation can go through this edge without any input.</li>
+</ol>
+<h3 id="NFA"><a href="#NFA" class="headerlink" title="NFA"></a>NFA</h3><p>so a NFA can be tranlate into code like this:</p>
+<figure class="highlight plaintext"><figcaption><span>a real code</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">//start =100</span><br><span class="line">//middle =010</span><br><span class="line">//end=001</span><br><span class="line"></span><br><span class="line">class node&#123;</span><br><span class="line">    node(node_id id,int type)&#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">        this.type = type</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br><span class="line">class edge&#123;</span><br><span class="line">    edge(from_node,to_node,package)&#123;</span><br><span class="line">        this.from = from_node;</span><br><span class="line">        this.to = to_node;</span><br><span class="line">        this.package = package;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;   </span><br><span class="line">class NFA&#123;</span><br><span class="line">    NFA()&#123;</span><br><span class="line">        this.nodes = [];</span><br><span class="line">        this.edges = [];</span><br><span class="line">    &#125;</span><br><span class="line">    add_node(node)&#123;</span><br><span class="line">        this.nodes.push(node);</span><br><span class="line">    &#125;</span><br><span class="line">    add_edge(edge)&#123;</span><br><span class="line">        this.edges.push(edge);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><font size=5> wait! Cpp-like difinition has no use! how can I create a NFA from a RE?</font></p>
+<p>in pratice, we usually create a NFA which each edges only have one or none package.so I will use this as a example:</p>
+<p>let’s use RE mentioned before: (aa)<em>b(aa)</em></p>
+<ol>
+<li>seperate sentense,we will have three parts: (aa)* , b , (aa)*<br>why this way?<br>well, some basic RE are easy to translte to NFA, like: “a”, “a|b”, “a*”, so our goal in this step is to seperate the RE into basic parts.</li>
+<li>look carefully at each part. can we translate it?<br>yes! (aa)* can be translated like this:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">well I don&#x27;t know how to insert image here</span><br></pre></td></tr></table></figure>
+will continue later…</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/12/01/others/FriendlyLinks/" rel="prev" title="Friendly links">
+                  <i class="fa fa-angle-left"></i> Friendly links
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/12/11/philosophy/fuckyouelite/" rel="next" title="elite sucks">
+                  elite sucks <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jack Greed</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
